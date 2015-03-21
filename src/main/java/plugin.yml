@@ -1,0 +1,25 @@
+author: [Citymonstret]
+main: com.cyandev.plugin.chaticon.ChatIcon
+version: 1.0
+name: ChatIcon
+commands:
+  icon:
+    permission: chaticon.use
+    aliases: [cicon]
+    description: ChatIcon Main Command
+    usage: /icon [subcommand]
+permissions:
+  chaticon.use:
+    default: op
+  chaticon.set:
+    default: op
+  chaticon.list:
+    default: op
+  chaticon.set.others:
+    default: op
+  chaticon.remove:
+    default: op
+  chaticon.remove.others:
+    default: op
+  chaticon.set.all:
+    default: op
