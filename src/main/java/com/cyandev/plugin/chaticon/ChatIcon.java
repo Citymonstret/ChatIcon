@@ -1,5 +1,6 @@
 package com.cyandev.plugin.chaticon;
 
+import com.cyandev.plugin.chaticon.builder.ReflectionSender;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -21,6 +22,8 @@ public class ChatIcon extends JavaPlugin {
     protected final Map<String, Object> icons = new HashMap<>();
     private final Map<String, Object> storage = new HashMap<>();
 
+    public static boolean NMS_CONTROL = false;
+
      {
         icons.put("plane", "\u2708");
         icons.put("snowman", "\u2603");
@@ -30,12 +33,18 @@ public class ChatIcon extends JavaPlugin {
     @Override
     public void onEnable() {
         if (checkVersion()) {
-            getLogger().log(Level.SEVERE, "Unsupported version - The plugin only supports: " + SUPPORTED_VERSION);
-            getPluginLoader().disablePlugin(this);
+            getLogger().log(Level.WARNING, "Unsupported version - The plugin is built for: " + SUPPORTED_VERSION);
+            getLogger().log(Level.WARNING, "Will attempt to use the NMS Control System");
+            // getPluginLoader().disablePlugin(this);
         } else {
             setupConfig();
             getCommand("icon").setExecutor(new Command(this));
             Bukkit.getPluginManager().registerEvents(new Listener(this), this);
+
+            if (NMS_CONTROL) {
+                ReflectionSender.setup();
+                getLogger().log(Level.WARNING, "Using ReflectionSender -> Might cause issues!");
+            }
         }
     }
 
@@ -51,6 +60,7 @@ public class ChatIcon extends JavaPlugin {
         config.options().header("ChatIcon> Configuration - Find more at http://unicodefor.us/");
         config.addDefault("icons", icons);
         config.addDefault("storage", storage);
+        config.addDefault("nmsControl", false);
         saveConfig();
         reloadConfig();
 
@@ -64,6 +74,7 @@ public class ChatIcon extends JavaPlugin {
         } catch(final Exception ignore) {
             // Ignore
         }
+        NMS_CONTROL = config.getBoolean("nmsControl");
     }
 
     private void endConfig() {
